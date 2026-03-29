@@ -1,0 +1,18 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "lean-forge"
+version = "0.1.0"
+description = "Autonomous code hardening via Invariant Enforcement Score optimization"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+dependencies = []
+
+[project.scripts]
+forge = "lean_forge.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/lean_forge"]
