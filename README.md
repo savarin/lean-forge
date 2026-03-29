@@ -8,11 +8,26 @@ and validated (2) to structural (3).
 
 ## Install
 
+### As a Claude Code plugin (recommended)
+
+```
+/plugin marketplace add savarin/lean-forge
+/plugin install lean-forge@lean-forge
+```
+
+Then invoke in any repo:
+
+```
+/lean-forge:forge                     # default: Lean formalization + optimization
+/lean-forge:forge --direct            # skip formalization, code reading only
+/lean-forge:forge --tag my-hardening  # custom branch name
+```
+
+### As a standalone CLI
+
 ```bash
 uv tool install .
 ```
-
-## Usage
 
 ```bash
 forge <repo>                          # default: Lean formalization + optimization (requires Lean 4)

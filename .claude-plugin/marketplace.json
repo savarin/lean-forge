@@ -1,0 +1,13 @@
+{
+  "name": "lean-forge",
+  "owner": { "name": "savarin" },
+  "metadata": { "description": "Autonomous code hardening via IES optimization", "version": "0.1.0" },
+  "plugins": [{
+    "name": "lean-forge",
+    "source": "./",
+    "description": "Analyzes invariants, builds evaluation harness, iteratively hardens enforcement using Lean formalization.",
+    "version": "0.1.0",
+    "category": "development",
+    "keywords": ["lean", "formalization", "invariants", "code-hardening"]
+  }]
+}

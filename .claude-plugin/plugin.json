@@ -1,0 +1,10 @@
+{
+  "name": "lean-forge",
+  "version": "0.1.0",
+  "description": "Autonomous code hardening via IES optimization",
+  "author": { "name": "savarin" },
+  "homepage": "https://github.com/savarin/lean-forge",
+  "repository": "https://github.com/savarin/lean-forge",
+  "license": "MIT",
+  "skills": "./skills/"
+}
