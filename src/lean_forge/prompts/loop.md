@@ -60,7 +60,9 @@ FOR EACH target in targets.md:
   9. If prepare.py itself errors (not a score change — an exception):
        Log status=eval_error in results.tsv. This is a stop condition.
        Do NOT attempt to fix prepare.py. Record the error and stop.
-  10. Record in $WORK/results.tsv (include lines_delta from git diff --stat)
+  10. Record in $WORK/results.tsv (include lines_delta from git diff --stat).
+       The `tests` column: number of test failures (0 = all passed, N = N failed,
+       -1 = no test suite found, -2 = test command timed out).
   11. Log the iteration (append to $WORK/iteration-log.md):
        ```
        ## Iteration N: <short title>
@@ -108,7 +110,8 @@ LOOP:
        KEEP if: tests pass AND ies_score ≥ previous best
        DISCARD if: tests fail OR ies_score < previous best
          → git -C $REPO reset --hard HEAD~1
-  9. Record in $WORK/results.tsv (include lines_delta):
+  9. Record in $WORK/results.tsv (include lines_delta).
+       The `tests` column: number of failures (0 = passed, -1 = no suite).
        - On keep: status=keep
        - On discard: status=discard
   10. Log the iteration (append to $WORK/iteration-log.md):
@@ -198,8 +201,19 @@ toolchain:
   invariants (roundtrip, commutativity, bounds). A property test that
   generates random inputs and checks the invariant IS structural
   enforcement — the type system just happens to be the test framework.
-- **Rust/Go/TypeScript**: the type system is the primary enforcement
-  mechanism. Use it directly.
+- **Rust**: the type system is the primary enforcement mechanism.
+  Fixed-size arrays (`[u8; 32]`) over `Vec` for known-size data.
+  `Result<T, E>` return types instead of `panic!`/`unwrap`.
+  Newtype structs (`struct Difficulty(u8)`) for domain constraints.
+  Struct construction to enforce relationships (e.g., a `BlockChain`
+  struct that owns the previous hash, making broken linkage impossible).
+- **Go**: error return and propagation (`if err != nil { return err }`).
+  Defer ordering for resource cleanup (defer close BEFORE operations
+  that can fail). Type widening for numeric safety (`uint32` → `uint64`).
+  Guard clauses for empty/nil state at function entry. Named types for
+  domain semantics.
+- **TypeScript**: branded types, discriminated unions, `readonly`
+  properties, `as const` assertions.
 
 Do NOT install new type checkers or test frameworks. Use what's already
 in the project's toolchain.

@@ -169,11 +169,18 @@ if __name__ == "__main__":
 ### Check function guidelines
 
 - **Extract scope first, then detect.** Every check should start by
-  extracting the relevant function or class body using `re.DOTALL`:
+  extracting the relevant function or class body using `re.DOTALL`.
+  Adapt the pattern to the target language:
   ```python
+  # Python
   match = re.search(r'def\s+my_func\(.*?\).*?(?=\ndef\s|\nclass\s|\Z)',
                     content, re.DOTALL)
-  body = match.group() if match else ""
+  # Go
+  match = re.search(r'func\s+(?:\(.*?\)\s+)?MyFunc\(.*?\)\s*(?:\(.*?\)\s*)?\{.*?\n\}',
+                    content, re.DOTALL)
+  # Rust
+  match = re.search(r'(?:pub\s+)?fn\s+my_func\(.*?\).*?\{.*?\n\}',
+                    content, re.DOTALL)
   ```
   Then search within `body`. This handles multiline formatting naturally.
 - **Check for the EFFECT, not the exact code shape.** A runtime check
@@ -192,6 +199,17 @@ if __name__ == "__main__":
   detection than regex. Use it when formatting variations would make
   regex fragile (e.g., detecting whether a function raises a specific
   exception type).
+- **Cross-language detection patterns.** prepare.py is always Python,
+  but the target repo may be any language. Adjust regex patterns:
+  - **Go**: structural = named types, error returns (`func.*error`);
+    validated = `if err != nil`, bounds checks; unguarded = unchecked
+    error (`_ = someFunc()`), missing nil guard before dereference.
+  - **Rust**: structural = `Result<T, E>` return, newtype structs,
+    fixed-size arrays (`[u8; N]`); validated = `assert!`, `if let`,
+    match arms; unguarded = `.unwrap()`, `.expect()`, unchecked indexing.
+  - **TypeScript/JavaScript**: structural = branded types, discriminated
+    unions; validated = `typeof`/`instanceof` checks, `if (!x) throw`;
+    unguarded = unchecked property access, `as` type assertions.
 - Use `re.search()` for pattern detection, not exact string matching.
   Code changes may vary in whitespace, naming, or placement.
 - Check multiple file locations (the agent might move code between modules).
