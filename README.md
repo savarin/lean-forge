@@ -1,5 +1,8 @@
 # lean-forge
 
+> [!IMPORTANT]
+> This repository is superseded by [lean-refine](https://github.com/savarin/lean-refine). Please use that instead.
+
 Autonomous code hardening via IES (Invariant Enforcement Score) optimization.
 
 Wraps Claude to analyze a repository's invariants, build an evaluation harness,
